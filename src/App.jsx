@@ -232,7 +232,7 @@ function App() {
     if (!monaco) {
       return;
     }
-    monacoService.initialize(monaco, "http://localhost:5167/").then(() => {
+    monacoService.initialize(monaco).then(() => {
       setLoading(false)
     });
   }, [monaco]);
