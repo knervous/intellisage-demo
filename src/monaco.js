@@ -108,7 +108,7 @@ export class MonacoService {
     };
 
     // Get one diagnostic check to start and listen for changes
-    this.debouncedGetDiagnosticsAsync(this.model.getValue());
+    this.getDiagnosticsAsync(this.model.getValue());
     this.model.onDidChangeContent(() => {
       this.debouncedGetDiagnosticsAsync(this.model.getValue());
     });
