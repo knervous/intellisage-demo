@@ -37,6 +37,17 @@ export class MonacoService {
     // Load or reference our iframe and wait for the loaded callback
     let iframe = document.getElementById(iframeId);
     if (!iframe) {
+      // Define initialization listener handler before loading iframe
+      const initPromise = new Promise(res => {
+        const listener = (event) => {
+            if (event.data?.intellisageInitialized) {
+                res();
+                window.removeEventListener('message', listener);
+            }
+        }
+        window.addEventListener('message', listener);
+      });
+
       iframe = document.createElement('iframe');
       document.body.appendChild(iframe);
       iframe.id = iframeId;
@@ -44,10 +55,14 @@ export class MonacoService {
       iframe.height = 0;
       iframe.src = iframeUrl;
       iframe.title = 'IntelliSage';
+      
       await new Promise((res, rej) => {
         iframe.onload = res;
         iframe.onerror = rej;
       });
+
+      // Now we can await the initialization callback
+      await initPromise;
     }
 
     this.intellisage = (method, ...args) => {
